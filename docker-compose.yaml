@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: "product"
+      POSTGRES_USER: "django"
+      POSTGRES_PASSWORD: "django"
+    ports:
+      - "5434:5432"
+
+  django:
+    build:
+      context: ./
+    ports:
+      - "8000:8000"
+    command: sh -c " poetry run python3 manage.py makemigrations && poetry run python3 manage.py migrate && poetry run python3 manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - postgres
